@@ -41,21 +41,21 @@
                         <div
                           class="tabs-tab"
                           v-bind:class="{ 'tabs-tab-active': tabIndex == 0 }"
-                          @click="tabIndex = 0"
+                          @click="handleSwitch(0)"
                         >
                           历史
                         </div>
                         <div
                           class="tabs-tab"
                           v-bind:class="{ 'tabs-tab-active': tabIndex == 1 }"
-                          @click="tabIndex = 1"
+                          @click="handleSwitch(1)"
                         >
                           我的收藏
                         </div>
                         <div
                           class="tabs-tab"
                           v-bind:class="{ 'tabs-tab-active': tabIndex == 2 }"
-                          @click="tabIndex = 2"
+                          @click="handleSwitch(2)"
                         >
                           我的实验
                         </div>
@@ -68,20 +68,12 @@
             <div class="ant-card-body">
               <div class="row" v-show="tabIndex == 0">
                 <div class="col-md-4" v-for="item of history" :key="item.id">
-                  <Card
-                    :hoverable="true"
-                    :cover="item.img"
-                    :title="item.title"
-                  />
+                  <Card :cover="item.img" :title="item.title" />
                 </div>
               </div>
               <div class="row" v-show="tabIndex == 1">
                 <div class="col-md-4" v-for="item of collect" :key="item.id">
-                  <Card
-                    :hoverable="true"
-                    :cover="item.img"
-                    :title="item.title"
-                  />
+                  <Card :cover="item.imgUrl" :title="item.name" :id="item.id" />
                 </div>
               </div>
               <div class="row" v-show="tabIndex == 2">
@@ -142,8 +134,9 @@
 </template>
 
 <script>
-import Card from "@/components/Card.vue";
+import Card from "@/components/Card";
 import { getUserDetail } from "@/api/user";
+import { getExperimentsInCollected } from "@/api/experiment";
 
 export default {
   name: "List",
@@ -188,28 +181,8 @@ export default {
           url: "/detail.html"
         }
       ],
-      collect: [
-        {
-          id: 0,
-          title: "XXXX虚拟仿真",
-          img: require("@/assets/img/experiment/exp2.jpg"),
-          url: "/detail"
-        },
-        {
-          id: 1,
-          title: "XXXX虚拟仿真",
-          img: require("@/assets/img/experiment/exp2.jpg"),
-          url: "/detail"
-        }
-      ],
-      mine: [
-        {
-          id: 0,
-          title: "XXXX虚拟仿真",
-          img: require("@/assets/img/experiment/exp2.jpg"),
-          url: "/detail"
-        }
-      ]
+      collect: [],
+      mine: []
     };
   },
   mounted: function() {
@@ -224,6 +197,14 @@ export default {
     },
     handleShare() {
       this.$message("你点击了分享");
+    },
+    handleSwitch(index) {
+      this.tabIndex = index;
+      if (index == 1 && this.collect.length === 0) {
+        getExperimentsInCollected().then(response => {
+          this.collect = response.data.data.list;
+        });
+      }
     }
   }
 };

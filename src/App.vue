@@ -27,7 +27,7 @@ export default {
   min-height: 100vh;
   flex-direction: column;
   justify-content: space-between;
-  background: #f0f2f5;
+  background: #f6f6f6;
 }
 .content {
   flex: 1 1 auto;

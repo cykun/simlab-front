@@ -7,7 +7,7 @@
       <div class="container">
         <main class="row">
           <div class="col-md-3" v-for="item of experiments" :key="item.id">
-            <Card :hoverable="true" :cover="item.imgUrl" :title="item.name" />
+            <Card :cover="item.imgUrl" :title="item.name" :id="item.id" />
           </div>
           <div class="col-12">
             <pagination :current="current" :total="total" />
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Card from "@/components/Card.vue";
+import Card from "@/components/Card";
 import PageHeader from "@/components/PageHeader.vue";
 import pagination from "@/components/Pagination.vue";
 import { getExperimentList } from "@/api/experiment";

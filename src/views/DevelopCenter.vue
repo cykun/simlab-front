@@ -1,18 +1,19 @@
 <template>
   <div class="py-4 bg-light">
     <div class="container">
-      <div class="row">
-        <div class="col-md-6 my-3">
-          <h1 class="my-5">仿真实验室开发者中心</h1>
+      <div class="row align-items-center">
+        <div class="col-xl-5 col-lg-6">
+          <h4>你好！开发者</h4>
+          <h1 class="mb-4">仿真实验室开发者中心</h1>
           <router-link
             :to="{ name: 'ExperimentCreate' }"
             class="btn btn-secondary"
             >提交你的专属仿真实验</router-link
           >
         </div>
-        <div class="col-md-6">
+        <div class="col-lg-6 offset-xl-1">
           <img
-            src="../assets/img/developbanner.svg"
+            src="http://127.0.0.1/img/20200329001.png"
             alt="Img"
             class="img-fluid"
           />

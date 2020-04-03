@@ -35,6 +35,13 @@ export function getCurrentUserNav() {
   });
 }
 
+export function getMessageNav() {
+  return axios({
+    url: "http://127.0.0.1:8085/notify/nav",
+    method: "get"
+  });
+}
+
 export function logout() {
   return axios({
     url: "/auth/logout",

@@ -1,6 +1,19 @@
 import axios from "axios";
+import store from "@/store";
 
 const err = error => {
+  if (error.response) {
+    if (error.response.status === 401) {
+      let access_token = window.localStorage.getItem("access_token");
+      if (access_token) {
+        store.dispatch("Logout").then(() => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        });
+      }
+    }
+  }
   return Promise.reject(error);
 };
 
