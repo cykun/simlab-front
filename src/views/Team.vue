@@ -10,7 +10,7 @@
             <div class="pic">
               <img
                 class="img-fluid"
-                src="http://127.0.0.1/img/202031000002.jpeg"
+                src="https://vslab.oss-cn-shenzhen.aliyuncs.com/img/202003311654.jpeg"
                 alt=""
               />
             </div>
@@ -25,7 +25,7 @@
             <div class="pic">
               <img
                 class="img-fluid"
-                src="http://127.0.0.1/img/202031000002.jpeg"
+                src="https://vslab.oss-cn-shenzhen.aliyuncs.com/img/202003311654.jpeg"
                 alt=""
               />
             </div>
@@ -40,7 +40,7 @@
             <div class="pic">
               <img
                 class="img-fluid"
-                src="http://127.0.0.1/img/202031000002.jpeg"
+                src="https://vslab.oss-cn-shenzhen.aliyuncs.com/img/202003311654.jpeg"
                 alt=""
               />
             </div>
@@ -55,7 +55,7 @@
             <div class="pic">
               <img
                 class="img-fluid"
-                src="http://127.0.0.1/img/202031000002.jpeg"
+                src="https://vslab.oss-cn-shenzhen.aliyuncs.com/img/202003311654.jpeg"
                 alt=""
               />
             </div>

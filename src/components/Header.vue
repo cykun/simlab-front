@@ -33,12 +33,16 @@
               </li>
             </ul>
           </nav>
-          <notice-icon />
+          <notice-icon v-if="isLogined" />
           <div class="topbar-divider d-none d-sm-block"></div>
           <!-- 未登录 -->
           <div v-if="!isLogined">
             <router-link :to="{ path: '/login' }" class="btn">登录</router-link>
-            <a class="btn btn-gradient btn-round btn-shadow " href="# ">注册</a>
+            <router-link
+              :to="{ path: '/register' }"
+              class="btn btn-gradient btn-round btn-shadow "
+              >注册</router-link
+            >
           </div>
           <!-- 已登录 -->
           <user-menu v-if="isLogined" />

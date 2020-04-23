@@ -5,4 +5,5 @@ export default function Initializer() {
     access_token: window.localStorage.getItem("access_token"),
     refresh_token: window.localStorage.getItem("refresh_token")
   });
+  store.dispatch("GetUserInfo");
 }

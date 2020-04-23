@@ -7,6 +7,9 @@
       <router-link :to="{ path: '/account/setting' }" class="dropdown-item "
         >个人设置</router-link
       >
+      <router-link :to="{ path: '/class' }" class="dropdown-item "
+        >我的班级</router-link
+      >
       <div class="dropdown-divider "></div>
       <a href="javascript:void(0) " class="dropdown-item " @click="handleLogout"
         >登出</a

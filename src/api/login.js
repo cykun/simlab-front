@@ -3,7 +3,7 @@ import { axios } from "@/utils/request";
 export function login({ username, password }) {
   return axios({
     method: "post",
-    url: "http://127.0.0.1:8000/oauth/token",
+    url: "http://49.235.183.95:8000/oauth/token",
     data: {
       username: username,
       password: password,
@@ -30,14 +30,14 @@ export function login({ username, password }) {
 
 export function getCurrentUserNav() {
   return axios({
-    url: "http://127.0.0.1:8085/user/nav",
+    url: "http://49.235.183.95:8085/user/nav",
     method: "get"
   });
 }
 
 export function getMessageNav() {
   return axios({
-    url: "http://127.0.0.1:8085/notify/nav",
+    url: "http://49.235.183.95:8085/notify/nav",
     method: "get"
   });
 }

@@ -13,7 +13,7 @@
         </div>
         <div class="col-lg-6 offset-xl-1">
           <img
-            src="http://127.0.0.1/img/20200329001.png"
+            src="https://vslab.oss-cn-shenzhen.aliyuncs.com/img/20200329001.png"
             alt="Img"
             class="img-fluid"
           />

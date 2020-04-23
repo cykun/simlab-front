@@ -2,7 +2,7 @@
   <div class="page-con">
     <div>
       <router-link :to="{ path: '/' }" class="logo-text">
-        <span>Simlab</span>
+        <span>仿真实验</span>
         <img src="@/assets/img/logo.svg" alt="logo"
       /></router-link>
     </div>
@@ -53,8 +53,8 @@
         </button>
       </div>
       <div style="position: relative;margin-top:16px;">
-        <span>qq</span>
-        <span>github</span>
+        <!-- <span>qq</span>
+        <span>github</span> -->
       </div>
     </div>
   </div>

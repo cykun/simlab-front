@@ -2,7 +2,7 @@ import { axios } from "@/utils/request";
 
 export function getRecommend() {
   return axios({
-    url: "http://127.0.0.1:8085/experiment/list/recommend",
+    url: "http://49.235.183.95:8085/experiment/list/recommend",
     method: "get",
     headers: {
       "Content-Type": "application/json;charset=UTF-8"
@@ -12,7 +12,7 @@ export function getRecommend() {
 
 export function getExperimentList(type) {
   return axios({
-    url: "http://127.0.0.1:8085/experiment/list/" + type,
+    url: "http://49.235.183.95:8085/experiment/list/" + type,
     method: "get",
     headers: {
       "Content-Type": "application/json;charset=UTF-8"
@@ -22,14 +22,14 @@ export function getExperimentList(type) {
 
 export function getExperimentDetail(id) {
   return axios({
-    url: "http://127.0.0.1:8085/experiment/detail/" + id,
+    url: "http://49.235.183.95:8085/experiment/detail/" + id,
     method: "get"
   });
 }
 
 export function uploadExperiment(formData) {
   return axios({
-    url: "http://127.0.0.1:8085/experiment/add",
+    url: "http://49.235.183.95:8085/experiment/add",
     method: "post",
     data: formData,
     headers: {
@@ -40,14 +40,14 @@ export function uploadExperiment(formData) {
 
 export function getCommentList(expId) {
   return axios({
-    url: "http://127.0.0.1:8085/comment/list/" + expId,
+    url: "http://49.235.183.95:8085/comment/list/" + expId,
     method: "get"
   });
 }
 
 export function addComment({ expId, content }) {
   return axios({
-    url: "http://127.0.0.1:8085/comment",
+    url: "http://49.235.183.95:8085/comment",
     method: "post",
     data: {
       expId: expId,
@@ -61,7 +61,7 @@ export function addComment({ expId, content }) {
 
 export function checkExperimentCollect(experimentId) {
   return axios({
-    url: "http://127.0.0.1:8085/experiment/collect/check",
+    url: "http://49.235.183.95:8085/experiment/collect/check",
     method: "get",
     params: {
       experimentId: experimentId
@@ -71,7 +71,7 @@ export function checkExperimentCollect(experimentId) {
 
 export function collectExperiment(experimentId) {
   return axios({
-    url: "http://127.0.0.1:8085/experiment/collect",
+    url: "http://49.235.183.95:8085/experiment/collect",
     method: "post",
     data: {
       experimentId: experimentId
@@ -92,9 +92,50 @@ export function collectExperiment(experimentId) {
   });
 }
 
+export function cancelCollectExperiment(experimentId) {
+  return axios({
+    url:
+      "http://49.235.183.95:8085/experiment/collect?experimentId=" +
+      experimentId,
+    method: "delete"
+  });
+}
+
 export function getExperimentsInCollected() {
   return axios({
-    url: "http://127.0.0.1:8085/experiment/list/collect",
+    url: "http://49.235.183.95:8085/experiment/list/collect",
+    method: "get"
+  });
+}
+
+export function uploadRecord({ score, period, experimentId }) {
+  return axios({
+    url: "http://49.235.183.95:8085/experiment/record",
+    method: "post",
+    data: {
+      score: score,
+      period: period,
+      experimentId: experimentId
+    },
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8"
+    }
+  });
+}
+
+export function getRecordList(expId) {
+  return axios({
+    url: "http://49.235.183.95:8085/experiment/records",
+    method: "get",
+    params: {
+      experimentId: expId
+    }
+  });
+}
+
+export function getAllRecordList() {
+  return axios({
+    url: "http://49.235.183.95:8085/experiment/records/all",
     method: "get"
   });
 }

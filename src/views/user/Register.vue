@@ -2,7 +2,7 @@
   <div class="page-con">
     <div>
       <router-link :to="{ path: '/' }" class="logo-text">
-        <span>Simlab</span>
+        <span>仿真实验</span>
         <img src="@/assets/img/logo.svg" alt="logo"
       /></router-link>
     </div>
@@ -67,8 +67,8 @@
         </div>
       </div>
       <div style="position: relative;margin-top:16px;">
-        <span>1</span>
-        <span>2</span>
+        <!-- <span>1</span>
+        <span>2</span> -->
       </div>
     </div>
   </div>
@@ -150,7 +150,7 @@ export default {
               if (response.data.code === 200) {
                 this.$message("注册成功");
                 this.$router.push({ path: "/login" });
-              } else this.$message("注册失败1");
+              } else this.$message(response.data.msg);
             })
             .catch(error => {
               window.alert(error);

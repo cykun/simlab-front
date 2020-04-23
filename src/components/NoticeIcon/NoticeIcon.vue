@@ -7,7 +7,7 @@
         </div>
         <div>
           <div>{{ item.content }}</div>
-          <div class="small ">{{ item.publishTime }}</div>
+          <div class="small ">{{ item.createTime }}</div>
         </div>
       </a>
     </div>

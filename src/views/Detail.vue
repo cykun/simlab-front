@@ -11,7 +11,7 @@
             ></video>
           </el-card>
           <el-card class="mt-3" shadow="never">
-            <el-tabs v-model="activeName">
+            <el-tabs v-model="activeName" @tab-click="handleClick">
               <el-tab-pane
                 label="简要"
                 name="first"
@@ -28,15 +28,29 @@
                 name="third"
                 v-html="experimentInfo.operation"
               ></el-tab-pane>
-              <el-tab-pane label="实验记录" name="forth"></el-tab-pane>
+              <el-tab-pane label="实验记录" name="forth">
+                <el-table
+                  :data="records"
+                  height="350"
+                  border
+                  style="width: 100%"
+                >
+                  <el-table-column prop="createTime" label="日期" width="240">
+                  </el-table-column>
+                  <el-table-column prop="score" label="成绩" width="240">
+                  </el-table-column>
+                  <el-table-column prop="period" label="时长">
+                  </el-table-column>
+                </el-table>
+              </el-tab-pane>
             </el-tabs>
           </el-card>
           <el-card class="mt-3" shadow="never">
-            <div class="comment">
-              <div class="comment-inner">
-                <div class="comment-avatar">
+            <div class="ant-comment">
+              <div class="ant-comment-inner">
+                <div class="ant-comment-avatar">
                   <span class="ant-avatar avatar-image">
-                    <img src="../assets/img/boy.svg" alt="" />
+                    <img v-bind:src="avatar" alt="Avatar" />
                   </span>
                 </div>
                 <div class="comment-content">
@@ -122,7 +136,16 @@
             <hr />
             <div>实验名：{{ experimentInfo.name }}</div>
             <div>所属专业：{{ experimentInfo.type }}</div>
-            <div>评价：5</div>
+            <div class="d-flex">
+              评价：<el-rate
+                v-model="rate"
+                disabled
+                show-score
+                text-color="#ff9900"
+                score-template="{ value }"
+              >
+              </el-rate>
+            </div>
             <div>实验人数：0</div>
           </el-card>
           <div class="mt-4">
@@ -151,14 +174,28 @@
 <script>
 import { mapGetters } from "vuex";
 import Comment from "@/components/Comment";
-import { Input, Button, Card, Tabs, TabPane } from "element-ui";
+import {
+  Input,
+  Button,
+  Card,
+  Tabs,
+  TabPane,
+  Table,
+  TableColumn,
+  Rate
+} from "element-ui";
 import {
   getCommentList,
   addComment,
   getExperimentDetail
 } from "@/api/experiment";
 import { getNowTime } from "@/utils/date";
-import { checkExperimentCollect, collectExperiment } from "@/api/experiment";
+import {
+  checkExperimentCollect,
+  collectExperiment,
+  cancelCollectExperiment,
+  getRecordList
+} from "@/api/experiment";
 
 export default {
   name: "Detail",
@@ -168,6 +205,9 @@ export default {
     ElButton: Button,
     ElTabs: Tabs,
     ElTabPane: TabPane,
+    ElTable: Table,
+    ElTableColumn: TableColumn,
+    ElRate: Rate,
     Comment
   },
   data: function() {
@@ -178,13 +218,16 @@ export default {
         name: "",
         type: "",
         videoUrl: "",
+        experimentUrl: "",
         concise: "",
         description: "",
         operation: ""
       },
+      records: [],
       myComment: "",
       comments: [],
-      collected: false
+      collected: false,
+      rate: 3.7
     };
   },
   computed: {
@@ -203,7 +246,13 @@ export default {
   },
   methods: {
     startExperiment() {
-      this.$router.push("/experiment/start");
+      this.$router.push({
+        path: "/experiment/start",
+        query: {
+          experimentUrl: this.experimentInfo.experimentUrl,
+          id: this.$route.params.id
+        }
+      });
     },
     handleAddComment() {
       if (this.username === "" || this.myComment === "") return;
@@ -235,6 +284,19 @@ export default {
           if (response.data.code === 200) {
             this.collected = true;
           }
+        });
+      } else {
+        cancelCollectExperiment(this.$route.params.id).then(response => {
+          if (response.data.code === 200) {
+            this.collected = false;
+          }
+        });
+      }
+    },
+    handleClick(tab, event) {
+      if (tab.name == "forth" && this.records.length === 0) {
+        getRecordList(this.$route.params.id).then(response => {
+          this.records = response.data.data;
         });
       }
     }

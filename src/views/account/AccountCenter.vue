@@ -13,10 +13,10 @@
               <hr />
               <div>
                 <h6>个人资料</h6>
-                <p>{{ userInfo.address }}</p>
-                <p>{{ userInfo.sex }}</p>
-                <p>{{ userInfo.school }}</p>
-                <p>{{ userInfo.major }}</p>
+                <p><i class="ri-map-pin-line"></i>：{{ userInfo.address }}</p>
+                <p><i class="ri-men-line"></i>：{{ userInfo.sex }}</p>
+                <p><i class="ri-building-line"></i>：{{ userInfo.school }}</p>
+                <p><i class="ri-book-line"></i>：{{ userInfo.major }}</p>
               </div>
               <hr />
               <div>
@@ -67,9 +67,19 @@
             </div>
             <div class="ant-card-body">
               <div class="row" v-show="tabIndex == 0">
-                <div class="col-md-4" v-for="item of history" :key="item.id">
-                  <Card :cover="item.img" :title="item.title" />
-                </div>
+                <el-table
+                  :data="records"
+                  height="350"
+                  border
+                  style="width: 100%"
+                >
+                  <el-table-column prop="createTime" label="日期" width="240">
+                  </el-table-column>
+                  <el-table-column prop="score" label="成绩" width="240">
+                  </el-table-column>
+                  <el-table-column prop="period" label="时长">
+                  </el-table-column>
+                </el-table>
               </div>
               <div class="row" v-show="tabIndex == 1">
                 <div class="col-md-4" v-for="item of collect" :key="item.id">
@@ -136,11 +146,14 @@
 <script>
 import Card from "@/components/Card";
 import { getUserDetail } from "@/api/user";
-import { getExperimentsInCollected } from "@/api/experiment";
+import { getExperimentsInCollected, getAllRecordList } from "@/api/experiment";
+import { Table, TableColumn } from "element-ui";
 
 export default {
   name: "List",
   components: {
+    ElTable: Table,
+    ElTableColumn: TableColumn,
     Card
   },
   data: function() {
@@ -161,26 +174,9 @@ export default {
           title: "XXXX虚拟仿真",
           img: require("@/assets/img/experiment/exp2.jpg"),
           url: "/detail"
-        },
-        {
-          id: 1,
-          title: "XXXX虚拟仿真",
-          img: require("@/assets/img/experiment/exp2.jpg"),
-          url: "/detail.html"
-        },
-        {
-          id: 2,
-          title: "XXXX虚拟仿真",
-          img: require("@/assets/img/experiment/exp2.jpg"),
-          url: "/detail"
-        },
-        {
-          id: 3,
-          title: "XXXX虚拟仿真",
-          img: require("@/assets/img/experiment/exp2.jpg"),
-          url: "/detail.html"
         }
       ],
+      records: [],
       collect: [],
       mine: []
     };
@@ -189,6 +185,9 @@ export default {
     getUserDetail().then(response => {
       const data = response.data;
       this.userInfo = data;
+    });
+    getAllRecordList().then(response => {
+      this.records = response.data.data;
     });
   },
   methods: {

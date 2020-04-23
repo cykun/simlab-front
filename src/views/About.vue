@@ -8,7 +8,7 @@
         <div class="col-lg-6">
           <img
             class="img-fluid"
-            src="http://127.0.0.1/img/20200328001.jpg"
+            src="https://vslab.oss-cn-shenzhen.aliyuncs.com/img/20200328001.jpg"
             alt="about"
           />
         </div>

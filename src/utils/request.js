@@ -26,4 +26,23 @@ axios.interceptors.request.use(config => {
   return config;
 }, err);
 
+axios.interceptors.response.use(
+  response => {
+    return response;
+  },
+  error => {
+    if (error.response.status === 401) {
+      let access_token = window.localStorage.getItem("access_token");
+      if (access_token) {
+        store.dispatch("Logout").then(() => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        });
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export { axios };
