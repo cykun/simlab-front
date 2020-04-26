@@ -2,7 +2,7 @@
   <div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="班级成员" name="first">
-        <el-table :data="studentData" style="width: 100%">
+        <el-table :data="memberData" style="width: 100%">
           <el-table-column prop="id" label="ID" width="90"> </el-table-column>
           <el-table-column prop="name" label="姓名" width="180">
           </el-table-column>
@@ -10,11 +10,11 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button
+              <!-- <el-button
                 size="mini"
                 @click="handleEdit(scope.$index, scope.row)"
                 >私信</el-button
-              >
+              > -->
               <el-button
                 size="mini"
                 type="danger"
@@ -35,8 +35,6 @@
           ></el-button>
           <el-table :data="taskData" style="width: 100%">
             <el-table-column prop="id" label="ID" width="60"> </el-table-column>
-            <el-table-column prop="title" label="标题" width="120">
-            </el-table-column>
             <el-table-column prop="content" label="内容" width="240">
             </el-table-column>
             <el-table-column prop="experimentId" label="实验号" width="180">
@@ -61,9 +59,6 @@
           </el-table>
           <el-dialog title="发布新任务" :visible.sync="dialogFormVisible">
             <el-form :model="form">
-              <el-form-item label="标题" :label-width="formLabelWidth">
-                <el-input v-model="form.title" autocomplete="off"></el-input>
-              </el-form-item>
               <el-form-item label="内容" :label-width="formLabelWidth">
                 <el-input v-model="form.content" autocomplete="off"></el-input>
               </el-form-item>
@@ -84,16 +79,21 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogFormVisible = false">取 消</el-button>
-              <el-button type="primary" @click="dialogFormVisible = false"
+              <el-button type="primary" @click="handleCreateTask"
                 >确 定</el-button
               >
             </div>
           </el-dialog>
           <el-dialog title="实验结果" :visible.sync="dialogTableVisible">
-            <el-table :data="experimentResult">
+            <el-table :data="taskResultData">
               <el-table-column
                 property="sno"
                 label="学号"
+                width="150"
+              ></el-table-column>
+              <el-table-column
+                property="name"
+                label="姓名"
                 width="150"
               ></el-table-column>
               <el-table-column
@@ -117,8 +117,12 @@
               </el-table-column>
             </el-table>
           </el-dialog>
-          <el-dialog title="实验报告" :visible.sync="dialogReportVisible">
-            <div>15151515</div>
+          <el-dialog
+            title="实验报告"
+            :visible.sync="dialogReportVisible"
+            :close-on-click-modal="false"
+          >
+            <div v-html="reportTemp"></div>
           </el-dialog>
         </div>
       </el-tab-pane>
@@ -162,6 +166,13 @@ import {
   Table,
   TableColumn
 } from "element-ui";
+import {
+  getMemberList,
+  getTaskList,
+  createTask,
+  getTaskResultList
+} from "@/api/class";
+
 export default {
   name: "Manager",
   components: {
@@ -184,63 +195,69 @@ export default {
       dialogReportVisible: false,
       formLabelWidth: "120px",
       form: {
-        title: "",
+        classId: this.$route.params.id,
         content: "",
         experimentId: "",
         endTime: ""
       },
-      studentData: [
+      memberData: [],
+      taskData: [],
+      taskResultData: [
         {
-          id: "3",
-          name: "王小虎",
-          sno: "031602555"
-        },
-        {
-          id: "5",
-          name: "王小虎",
-          sno: "031602556"
-        },
-        {
-          id: "7",
-          name: "王小虎",
-          sno: "031602557"
-        },
-        {
-          id: "12",
-          name: "王小虎",
-          sno: "031602558"
-        }
-      ],
-      taskData: [
-        {
-          id: "3",
-          title: "实验",
-          content: "完成过氧化氢制取延期实验",
-          experimentId: "2",
-          endTime: "2020/4/22"
-        }
-      ],
-      experimentResult: [
-        {
-          id: 5,
           sno: "031602542",
+          name: "郑西坤",
           score: 85,
           period: 120,
           report: "www.baidu.com"
         }
       ],
+      reportTemp: "",
       classInfo: {
         id: 2,
         name: "hahh"
       }
     };
   },
+  mounted: function() {
+    getMemberList(this.$route.params.id).then(response => {
+      this.memberData = response.data.data;
+    });
+    getTaskList(this.$route.params.id).then(response => {
+      this.taskData = response.data.data;
+    });
+  },
   methods: {
     handleCheck(index, row) {
+      getTaskResultList(row.id).then(response => {
+        this.taskResultData = response.data.data;
+      });
       this.dialogTableVisible = true;
     },
     handleCheckReport(index, row) {
       this.dialogReportVisible = true;
+      this.reportTemp = row.report;
+    },
+    handleCreateTask() {
+      createTask({
+        classId: this.$route.params.id,
+        content: this.form.content,
+        experimentId: this.form.experimentId,
+        endTime: this.form.endTime
+      }).then(response => {
+        this.taskData.push(response.data.data);
+        this.dialogFormVisible = false;
+      });
+    }
+  },
+  watch: {
+    $route(to, from) {
+      // 做一些路由变化的响应
+      getMemberList(this.$route.params.id).then(response => {
+        this.memberData = response.data.data;
+      });
+      getTaskList(this.$route.params.id).then(response => {
+        this.taskData = response.data.data;
+      });
     }
   }
 };

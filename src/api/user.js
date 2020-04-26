@@ -2,14 +2,14 @@ import { axios } from "@/utils/request";
 
 export function getUserDetail() {
   return axios({
-    url: "http://49.235.183.95:8085/user/info",
+    url: "http://127.0.0.1:8085/user/info",
     method: "get"
   });
 }
 
 export function getVerificationCode(mobile) {
   return axios({
-    url: "http://49.235.183.95:8085/sms/code",
+    url: "http://127.0.0.1:8085/sms/code",
     params: {
       mobile: mobile
     },
@@ -19,7 +19,7 @@ export function getVerificationCode(mobile) {
 
 export function register({ mobile, password, code, username }) {
   return axios({
-    url: "http://49.235.183.95:8085/user/register",
+    url: "http://127.0.0.1:8085/user/register",
     method: "post",
     data: {
       mobile: mobile,

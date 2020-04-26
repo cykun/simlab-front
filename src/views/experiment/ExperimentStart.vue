@@ -17,9 +17,7 @@
       <div ref="editor" style="text-align:left"></div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="handleUploadReport">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -28,7 +26,7 @@
 <script>
 import { Dialog, Button } from "element-ui";
 import E from "wangeditor";
-import { uploadRecord } from "@/api/experiment";
+import { uploadRecord, uploadReport } from "@/api/experiment";
 
 export default {
   name: "ExperimentStart",
@@ -41,17 +39,23 @@ export default {
       experimentUrl: this.$route.query.experimentUrl,
       dialogVisible: false,
       editorContent: "",
+      score: 0,
+      period: 0,
       editor: null
     };
   },
   methods: {
     receiveMessage(event) {
-      this.dialogVisible = true;
-      // uploadRecord({
-      //   score: event.data.score,
-      //   period: event.data.period,
-      //   experimentId: this.$route.query.id
-      // });
+      this.score = event.data.score;
+      this.period = event.data.period;
+      if (this.$route.query.taskId) {
+        this.dialogVisible = true;
+      }
+      uploadRecord({
+        score: this.score,
+        period: this.period,
+        experimentId: this.$route.query.id
+      });
     },
     showDialog() {
       this.editor = new E(this.$refs.editor);
@@ -65,6 +69,16 @@ export default {
     },
     closeDialog() {
       this.$refs.editor.innerHTML = "";
+    },
+    handleUploadReport() {
+      uploadReport({
+        taskId: this.$route.query.taskId,
+        report: this.editorContent,
+        score: this.score,
+        period: this.period
+      }).then(response => {
+        this.dialogVisible = false;
+      });
     }
   },
   created: function() {

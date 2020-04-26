@@ -17,10 +17,9 @@
               @click="dialogAddClass = true"
               >加入班级</el-button
             >
-            <div class="navbar-nav">
+            <div class="class-list">
               <p class="mt-4 mb-3">我的班级</p>
               <li
-                class="nav-link"
                 v-for="item in classMine"
                 :key="item.id"
                 v-bind:class="{ active: tabIndex == item.id }"
@@ -30,7 +29,6 @@
               </li>
               <p class="mt-4 mb-3">加入的班级</p>
               <li
-                class="nav-link"
                 v-for="item in classJoined"
                 :key="item.id"
                 v-bind:class="{ active: tabIndex == item.id }"
@@ -54,38 +52,55 @@
     <el-dialog title="创建班级" :visible.sync="dialogCreateClass" width="30%">
       <div>
         请输入班级名
-        <el-input></el-input>
+        <el-input v-model="classNameCreate" placeholder="班级名"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogCreateClass = false">取 消</el-button>
-        <el-button type="primary" @click="dialogCreateClass = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="handleCreateClass">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="加入班级" :visible.sync="dialogAddClass" width="30%">
       <div>
         请输入班级号
-        <el-input></el-input>
+        <el-input v-model="classJoinForm.classId"></el-input>
+        请输入显示的名称
+        <el-input v-model="classJoinForm.name"></el-input>
+        请输入学号
+        <el-input v-model="classJoinForm.sno"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogAddClass = false">取 消</el-button>
-        <el-button type="primary" @click="dialogAddClass = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="handleJoinClass">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <style scoped>
-.nav-link.active {
+.class-list {
+  list-style: none;
+}
+.class-list .active {
   color: #827af3;
   background: #e0defc;
+}
+.class-list li {
+  border-radius: 25px;
+}
+.class-list li a {
+  padding: 10px 15px;
+  display: block;
 }
 </style>
 <script>
 import { Card, Button, Dialog, Input } from "element-ui";
+import {
+  getClassListMine,
+  getClassListjoined,
+  createClass,
+  joinClass
+} from "@/api/class";
+
 export default {
   name: "Class",
   components: {
@@ -96,32 +111,58 @@ export default {
   },
   data: function() {
     return {
-      tabIndex: 0,
+      tabIndex: this.$route.params.id,
       dialogAddClass: false,
       dialogCreateClass: false,
-      classMine: [
-        {
-          id: 3,
-          name: "cykun的班级"
-        }
-      ],
-      classJoined: [
-        {
-          id: 2,
-          name: "它的班级"
-        }
-      ]
+      classMine: [],
+      classJoined: [],
+      classNameCreate: "",
+      classJoinForm: {
+        classId: "",
+        name: "",
+        sno: ""
+      }
     };
+  },
+  mounted: function() {
+    getClassListMine().then(response => {
+      this.classMine = response.data.data;
+    });
+    getClassListjoined().then(response => {
+      this.classJoined = response.data.data;
+    });
   },
   methods: {
     handleClassItemClick(index, type) {
       if (this.$route.params.id == index) return;
       this.tabIndex = index;
       if (type === "m") {
-        this.$router.push({ path: "/class/manager/" + index });
+        this.$router.replace({ path: "/class/manager/" + index });
       } else {
-        this.$router.push({ path: "/class/student/" + index });
+        this.$router.replace({ path: "/class/student/" + index });
       }
+    },
+    handleCreateClass() {
+      if (this.classNameCreate != "") {
+        createClass(this.classNameCreate).then(response => {
+          this.classMine.push(response.data.data);
+        });
+      }
+      this.dialogCreateClass = false;
+    },
+    handleJoinClass() {
+      joinClass({
+        classId: this.classJoinForm.classId,
+        name: this.classJoinForm.name,
+        sno: this.classJoinForm.sno
+      }).then(response => {
+        if (response.data.code === 200) {
+          this.classJoined.push(response.data.data);
+          this.dialogAddClass = false;
+        } else {
+          window.alert(response.data.msg);
+        }
+      });
     }
   }
 };
